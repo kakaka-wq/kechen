@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>C++ 课程导航 1.0</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      header {
+        background: linear-gradient(135deg, #2c3e50, #4a6491);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
+
+      .tabbar {
+        display: flex;
+        list-style: none;
+        background-color: #eef2f7;
+        padding: 0;
+        margin: 0;
+        border-bottom: 1px solid #d1d9e6;
+      }
+
+      .tabbar li {
+        flex: 1;
+        text-align: center;
+      }
+
+      .tab-button {
+        width: 100%;
+        padding: 1rem;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        color: #455a64;
+      }
+
+      .tab-button:hover {
+        background-color: #dce4ec;
+      }
+
+      .tab-button.active {
+        background-color: #ffffff;
+        color: #2c3e50;
+        font-weight: 600;
+        border-bottom: 3px solid #3498db;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem;
+      }
+
+      /* 进度条相关样式 */
+      #progress-container {
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .progress-section {
+        margin-bottom: 1.2rem;
+      }
+
+      .progress-section:last-child {
+        margin-bottom: 0;
+      }
+
+      .progress-section h3 {
+        margin: 0 0 0.8rem 0;
+        color: #2c3e50;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .progress-bar-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .progress-bar {
+        flex: 1;
+        height: 12px;
+        background-color: #eef2f7;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #3498db, #2c3e50);
+        transition: width 0.5s ease;
+        border-radius: 6px;
+      }
+
+      .level-progress .progress-fill {
+        background: linear-gradient(90deg, #2ecc71, #27ae60);
+      }
+
+      .progress-text {
+        font-weight: 600;
+        min-width: 60px;
+        text-align: right;
+        color: #455a64;
+      }
+
+      .import-export-container {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        padding: 1rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .import-export-container button {
+        margin: 0 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .export-button {
+        background-color: #27ae60;
+        color: white;
+      }
+
+      .export-button:hover {
+        background-color: #219653;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+      }
+
+      .import-button {
+        background-color: #3498db;
+        color: white;
+      }
+
+      .import-button:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      .course-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.2rem;
+        list-style: none;
+        padding: 0;
+      }
+
+      .course-card {
+        display: flex;
+        flex-direction: column;
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 1.2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border-left: 4px solid #eef2f7;
+      }
+
+      .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .course-card h3 {
+        margin: 0 0 1rem 0;
+        color: #2c3e50;
+        font-size: 1.1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .course-card a {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        text-align: center;
+        margin-top: auto;
+      }
+
+      .course-card a:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      /* 学习状态相关样式 */
+      .status-indicator {
+        font-size: 0.8em;
+        font-weight: 500;
+        padding: 0.2rem 0.5rem;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .status-indicator::before {
+        margin-right: 0.3rem;
+        font-weight: bold;
+      }
+
+      .status-not_started .status-indicator {
+        background-color: #f8f9fa;
+        color: #95a5a6;
+      }
+
+      .status-not_started .status-indicator::before {
+        content: '○';
+      }
+
+      .status-in_progress .status-indicator {
+        background-color: #e1f0fa;
+        color: #3498db;
+      }
+
+      .status-in_progress .status-indicator::before {
+        content: '◐';
+      }
+
+      .status-completed .status-indicator {
+        background-color: #e8f7f0;
+        color: #27ae60;
+      }
+
+      .status-completed .status-indicator::before {
+        content: '✓';
+      }
+
+      /* 不同状态的课程卡片边框颜色 */
+      .course-card.status-not_started {
+        border-left-color: #bdc3c7;
+      }
+
+      .course-card.status-in_progress {
+        border-left-color: #3498db;
+      }
+
+      .course-card.status-completed {
+        border-left-color: #27ae60;
+        background-color: #f8fdfa;
+      }
+
+      /* 上次打开的课程样式 */
+      .course-card.last-opened {
+        border-left: 4px solid #f39c12;
+        box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.1);
+      }
+
+      .course-card.last-opened .status-indicator {
+        background-color: #fef5e7;
+        color: #f39c12;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 0.6rem;
+        margin-top: 1rem;
+      }
+
+      .complete-button,
+      .restart-button {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .complete-button {
+        background-color: #27ae60;
+        color: white;
+      }
+
+      .complete-button:hover {
+        background-color: #219653;
+        transform: translateY(-2px);
+      }
+
+      .restart-button {
+        background-color: #f39c12;
+        color: white;
+      }
+
+      .restart-button:hover {
+        background-color: #e67e22;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          padding: 1rem;
+        }
+
+        .course-list {
+          grid-template-columns: 1fr;
+        }
+
+        .tabbar {
+          flex-wrap: wrap;
+        }
+
+        .tabbar li {
+          flex: 0 0 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>C++ 课程导航</h1>
+    </header>
+
+    <nav>
+      <ul class="tabbar" id="nav-tabs">
+        <!-- 导航标签将由 JavaScript 动态生成 -->
+      </ul>
+    </nav>
+
+    <div class="content">
+      <!-- 进度统计区域 -->
+      <div id="progress-container">
+        <div id="overall-progress" class="progress-section">
+          <h3>总体学习进度</h3>
+          <div class="progress-bar-container">
+            <div class="progress-bar">
+              <div class="progress-fill" id="overall-progress-fill"></div>
+            </div>
+            <span class="progress-text" id="overall-progress-text">0%</span>
+          </div>
+        </div>
+        <div id="current-level-progress" class="progress-section level-progress">
+          <h3 id="current-level-title">当前阶段学习进度</h3>
+          <div class="progress-bar-container">
+            <div class="progress-bar">
+              <div class="progress-fill" id="current-level-progress-fill"></div>
+            </div>
+            <span class="progress-text" id="current-level-progress-text"
+              >0%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div id="course-container">
+        <!-- 课程内容将由 JavaScript 动态生成 -->
+      </div>
+    </div>
+
+    <script>
+      ;(() => {
+        // 课程数据
+        const data = [
+          {
+            cname: '初识 C++',
+            order: 1,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/01/index.html',
+          },
+          {
+            cname: '变量与常量',
+            order: 2,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/02/index.html',
+          },
+          {
+            cname: '计算器',
+            order: 3,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/03/index.html',
+          },
+          {
+            cname: '选择结构',
+            order: 4,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/04/index.html',
+          },
+          {
+            cname: '选择嵌套',
+            order: 5,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/05/index.html',
+          },
+          {
+            cname: '平年和闰年',
+            order: 6,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/06/index.html',
+          },
+          {
+            cname: '期中测试',
+            order: 7,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/07/index.html',
+          },
+          {
+            cname: 'while循环',
+            order: 8,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/08/index.html',
+          },
+          {
+            cname: 'while循环应用',
+            order: 9,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/09/index.html',
+          },
+          {
+            cname: 'for循环',
+            order: 10,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/10/index.html',
+          },
+          {
+            cname: 'break和continue',
+            order: 11,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/11/index.html',
+          },
+          {
+            cname: '循环嵌套',
+            order: 12,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/12/index.html',
+          },
+          {
+            cname: '循环嵌套练习',
+            order: 13,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/13/index.html',
+          },
+          {
+            cname: '最大公约数',
+            order: 14,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/14/index.html',
+          },
+          {
+            cname: '有趣的质数',
+            order: 15,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/15/index.html',
+          },
+          {
+            cname: '一维数组',
+            order: 16,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/16/index.html',
+          },
+          {
+            cname: '数组训练',
+            order: 17,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/17/index.html',
+          },
+          {
+            cname: '期末测试',
+            order: 18,
+            level: 1,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/yijie/18/index.html',
+          },
+          {
+            cname: '质数筛',
+            order: 1,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/01/index.html',
+          },
+          {
+            cname: '简单排序',
+            order: 2,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/02/index.html',
+          },
+          {
+            cname: '更多的排序方法',
+            order: 3,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/03/index.html',
+          },
+          {
+            cname: '二维数组',
+            order: 4,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/04/index.html',
+          },
+          {
+            cname: '字符和字符数组',
+            order: 5,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/05/index.html',
+          },
+          {
+            cname: '字符数组应用',
+            order: 6,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/06/index.html',
+          },
+          {
+            cname: '字符串',
+            order: 7,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/07/index.html',
+          },
+          {
+            cname: '字符串练习',
+            order: 8,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/08/index.html',
+          },
+          {
+            cname: '期中测试',
+            order: 9,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/09/index.html',
+          },
+          {
+            cname: '函数',
+            order: 10,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/10/index.html',
+          },
+          {
+            cname: '函数与数组',
+            order: 11,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/11/index.html',
+          },
+          {
+            cname: '函数与递归',
+            order: 12,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/12/index.html',
+          },
+          {
+            cname: '函数的综合练习',
+            order: 13,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/13/index.html',
+          },
+          {
+            cname: '结构体',
+            order: 14,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/14/index.html',
+          },
+          {
+            cname: '结构体的应用',
+            order: 15,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/15/index.html',
+          },
+          {
+            cname: '文件操作',
+            order: 16,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/16/index.html',
+          },
+          {
+            cname: '指针',
+            order: 17,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/17/index.html',
+          },
+          {
+            cname: '期末测试',
+            order: 18,
+            level: 2,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/erjie/18/index.html',
+          },
+          {
+            cname: '模拟',
+            order: 1,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/01/index.html',
+          },
+          {
+            cname: '暴力枚举',
+            order: 2,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/02/index.html',
+          },
+          {
+            cname: '前缀和与差分',
+            order: 3,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/03/index.html',
+          },
+          {
+            cname: '时间复杂度',
+            order: 4,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/04/index.html',
+          },
+          {
+            cname: '快速排序',
+            order: 5,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/05/index.html',
+          },
+          {
+            cname: '归并排序',
+            order: 6,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/06/index.html',
+          },
+          {
+            cname: '高精度算法 1',
+            order: 7,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/07/index.html',
+          },
+          {
+            cname: '高精度算法 2',
+            order: 8,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/08/index.html',
+          },
+          {
+            cname: '高精度综合练习',
+            order: 9,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/09/index.html',
+          },
+          {
+            cname: '期中测试',
+            order: 10,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/10/index.html',
+          },
+          {
+            cname: '进制转换',
+            order: 11,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/11/index.html',
+          },
+          {
+            cname: '栈',
+            order: 12,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/12/index.html',
+          },
+          {
+            cname: '栈的练习 2',
+            order: 13,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/13/index.html',
+          },
+          {
+            cname: '栈的练习 2',
+            order: 14,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/14/index.html',
+          },
+          {
+            cname: '队列',
+            order: 15,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/15/index.html',
+          },
+          {
+            cname: '队列练习',
+            order: 16,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/16/index.html',
+          },
+          {
+            cname: '栈和队列综合练习',
+            order: 17,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/17/index.html',
+          },
+          {
+            cname: '期末测试',
+            order: 18,
+            level: 3,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sanjie/18/index.html',
+          },
+          {
+            cname: '指针',
+            order: 1,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/01/index.html',
+          },
+          {
+            cname: '链表',
+            order: 2,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/02/index.html',
+          },
+          {
+            cname: '单向链表',
+            order: 3,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/03/index.html',
+          },
+          {
+            cname: '集合、向量、图',
+            order: 4,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/04/index.html',
+          },
+          {
+            cname: '树的概念',
+            order: 5,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/05/index.html',
+          },
+          {
+            cname: '动态创建树',
+            order: 6,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/06/index.html',
+          },
+          {
+            cname: '树的遍历',
+            order: 7,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/07/index.html',
+          },
+          {
+            cname: '特殊二叉树',
+            order: 8,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/08/index.html',
+          },
+          {
+            cname: '期中测试',
+            order: 9,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/09/index.html',
+          },
+          {
+            cname: '堆',
+            order: 10,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/10/index.html',
+          },
+          {
+            cname: '哈夫曼树',
+            order: 11,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/11/index.html',
+          },
+          {
+            cname: '深度优先搜索',
+            order: 12,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/12/index.html',
+          },
+          {
+            cname: '深搜练习',
+            order: 13,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/13/index.html',
+          },
+          {
+            cname: '广度优先搜索',
+            order: 14,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/14/index.html',
+          },
+          {
+            cname: '广搜练习',
+            order: 15,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/15/index.html',
+          },
+          {
+            cname: '并查集',
+            order: 16,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/16/index.html',
+          },
+          {
+            cname: '位运算',
+            order: 17,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/17/index.html',
+          },
+          {
+            cname: '期末测试',
+            order: 18,
+            level: 4,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/sijie/18/index.html',
+          },
+          {
+            cname: '二分查找',
+            order: 1,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/01/index.html',
+          },
+          {
+            cname: '二分答案',
+            order: 2,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/02/index.html',
+          },
+          {
+            cname: '二分答案',
+            order: 3,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/03/index.html',
+          },
+          {
+            cname: '倍增算法',
+            order: 4,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/04/index.html',
+          },
+          {
+            cname: '倍增算法',
+            order: 5,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/05/index.html',
+          },
+          {
+            cname: '递推算法',
+            order: 6,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/06/index.html',
+          },
+          {
+            cname: '递推算法',
+            order: 7,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/07/index.html',
+          },
+          {
+            cname: '期中测试',
+            order: 8,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/08/index.html',
+          },
+          {
+            cname: '并查集',
+            order: 9,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/09/index.html',
+          },
+          {
+            cname: '贪心算法 1',
+            order: 10,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/10/index.html',
+          },
+          {
+            cname: '贪心算法 2',
+            order: 11,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/11/index.html',
+          },
+          {
+            cname: '动态规划 1',
+            order: 12,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/12/index.html',
+          },
+          {
+            cname: '动态规划 2',
+            order: 13,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/13/index.html',
+          },
+          {
+            cname: '背包问题',
+            order: 14,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/14/index.html',
+          },
+          {
+            cname: '复杂背包 1',
+            order: 15,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/15/index.html',
+          },
+          {
+            cname: '复杂背包 2',
+            order: 16,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/16/index.html',
+          },
+          {
+            cname: '区间动态规划与环形依赖处理',
+            order: 17,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/17/index.html',
+          },
+          {
+            cname: '期末测试',
+            order: 18,
+            level: 5,
+            url: 'https://icourseware.magaoedu.com/NOIP/12version/wujie/18/index.html',
+          },
+        ]
+
+        // 常量定义
+        const LEARNING_STATUS = {
+          NOT_START: 'not_started',
+          IN_PROGRESS: 'in_progress',
+          COMPLETED: 'completed',
+        }
+
+        const NAVIGATION_STATUS = {
+          ACTIVE: 'active',
+          INACTIVE: 'inactive',
+        }
+
+        const levels = ['一阶', '二阶', '三阶', '四阶', '五阶']
+        let currentActiveLevel = 1
+
+        // 工具函数
+        const utils = {
+          // 计算进度
+          calculateProgress(courses) {
+            const total = courses.length
+            const completed = courses.filter(
+              (course) => course.status === LEARNING_STATUS.COMPLETED
+            ).length
+            return {
+              total,
+              completed,
+              percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
+            }
+          },
+
+          // 更新进度条显示
+          updateProgressBar(fillElementId, textElementId, progress) {
+            const fillElement = document.getElementById(fillElementId)
+            const textElement = document.getElementById(textElementId)
+
+            if (fillElement && textElement) {
+              fillElement.style.width = `${progress.percentage}%`
+              textElement.textContent = `${progress.percentage}% (${progress.completed}/${progress.total})`
+            }
+          },
+        }
+
+        // 数据管理模块
+        const dataManager = {
+          // 从 localStorage 加载课程数据和学习状态
+          loadCourseData() {
+            try {
+              const savedStatus = localStorage.getItem('courseLearningStatus')
+              const learningStatus = savedStatus ? JSON.parse(savedStatus) : {}
+
+              const dataWithStatus = data.map((course) => ({
+                ...course,
+                status: learningStatus[course.url] || LEARNING_STATUS.NOT_START,
+              }))
+
+              return Promise.resolve(dataWithStatus)
+            } catch (error) {
+              console.error('加载课程数据失败:', error)
+              return Promise.resolve(
+                data.map((course) => ({
+                  ...course,
+                  status: LEARNING_STATUS.NOT_START,
+                }))
+              )
+            }
+          },
+
+          // 更新课程状态
+          updateCourseStatus(courseUrl, status) {
+            try {
+              const savedStatus = localStorage.getItem('courseLearningStatus')
+              const learningStatus = savedStatus ? JSON.parse(savedStatus) : {}
+
+              learningStatus[courseUrl] = status
+              localStorage.setItem(
+                'courseLearningStatus',
+                JSON.stringify(learningStatus)
+              )
+              return true
+            } catch (error) {
+              console.error('保存学习状态失败:', error)
+              return false
+            }
+          },
+
+          // 保存最后打开的课程
+          saveLastOpenedCourse(course) {
+            try {
+              const lastOpened = {
+                url: course.url,
+                cname: course.cname,
+                level: course.level,
+                order: course.order,
+                timestamp: new Date().toISOString(),
+              }
+              localStorage.setItem(
+                'lastOpenedCourse',
+                JSON.stringify(lastOpened)
+              )
+              return true
+            } catch (error) {
+              console.error('保存最后打开课程失败:', error)
+              return false
+            }
+          },
+
+          // 获取最后打开的课程
+          getLastOpenedCourse() {
+            try {
+              const lastOpened = localStorage.getItem('lastOpenedCourse')
+              return lastOpened ? JSON.parse(lastOpened) : null
+            } catch (error) {
+              console.error('获取最后打开课程失败:', error)
+              return null
+            }
+          },
+        }
+
+        // 进度显示模块
+        const progressDisplay = {
+          // 更新总体进度显示
+          updateOverallProgress() {
+            return dataManager.loadCourseData().then((courseData) => {
+              const overallProgress = utils.calculateProgress(courseData)
+              utils.updateProgressBar(
+                'overall-progress-fill',
+                'overall-progress-text',
+                overallProgress
+              )
+            })
+          },
+
+          // 更新当前级别进度显示
+          updateCurrentLevelProgress(level) {
+            return dataManager.loadCourseData().then((courseData) => {
+              const levelCourses = courseData.filter(
+                (course) => course.level === level
+              )
+              const levelProgress = utils.calculateProgress(levelCourses)
+
+              // 更新标题
+              const titleElement = document.getElementById('current-level-title')
+              if (titleElement) {
+                titleElement.textContent = `${levels[level - 1]}学习进度`
+              }
+
+              utils.updateProgressBar(
+                'current-level-progress-fill',
+                'current-level-progress-text',
+                levelProgress
+              )
+            })
+          },
+
+          // 更新所有进度显示
+          updateAllProgress(level) {
+            this.updateOverallProgress()
+            this.updateCurrentLevelProgress(level)
+          },
+        }
+
+        // UI 模块
+        const ui = {
+          // 创建导航标签
+          createNavTabs() {
+            const navTabs = document.getElementById('nav-tabs')
+            if (!navTabs) return
+
+            // 从 localStorage 获取上次的导航状态
+            const savedNavigationStatus =
+              localStorage.getItem('navigationStatus')
+            const navigationStatus = savedNavigationStatus
+              ? JSON.parse(savedNavigationStatus)
+              : {}
+
+            navTabs.innerHTML = ''
+
+            levels.forEach((levelName, index) => {
+              const li = document.createElement('li')
+              const button = document.createElement('button')
+              button.className = 'tab-button'
+              button.textContent = levelName
+              button.dataset.level = index + 1
+
+              // 如果有保存的状态，则应用
+              if (navigationStatus[levelName] === NAVIGATION_STATUS.ACTIVE) {
+                button.classList.add('active')
+                currentActiveLevel = index + 1
+              }
+
+              button.addEventListener('click', () => {
+                // 切换活动标签
+                document.querySelectorAll('.tab-button').forEach((btn) => {
+                  btn.classList.remove('active')
+                })
+                button.classList.add('active')
+
+                currentActiveLevel = index + 1
+
+                // 显示对应级别的课程
+                courseDisplay.showCoursesByLevel(currentActiveLevel)
+
+                // 更新进度显示
+                progressDisplay.updateCurrentLevelProgress(currentActiveLevel)
+              })
+
+              li.appendChild(button)
+              navTabs.appendChild(li)
+            })
+          },
+
+          // 创建导入导出按钮
+          createImportExportButtons() {
+            const container = document.getElementById('course-container')
+            if (!container) return
+
+            // 检查是否已存在按钮容器
+            if (document.querySelector('.import-export-container')) {
+              return
+            }
+
+            const buttonContainer = document.createElement('div')
+            buttonContainer.className = 'import-export-container'
+
+            // 导出按钮
+            const exportButton = document.createElement('button')
+            exportButton.textContent = '导出学习状态'
+            exportButton.className = 'export-button'
+            exportButton.addEventListener('click', this.exportLearningStatus)
+
+            // 导入按钮和隐藏的文件输入
+            const importButton = document.createElement('button')
+            importButton.textContent = '导入学习状态'
+            importButton.className = 'import-button'
+
+            const fileInput = document.createElement('input')
+            fileInput.type = 'file'
+            fileInput.accept = '.json'
+            fileInput.style.display = 'none'
+            fileInput.addEventListener('change', this.importLearningStatus)
+
+            importButton.addEventListener('click', () => {
+              fileInput.click()
+            })
+
+            buttonContainer.appendChild(exportButton)
+            buttonContainer.appendChild(importButton)
+            buttonContainer.appendChild(fileInput)
+
+            // 将按钮容器插入到课程容器前面
+            container.parentNode.insertBefore(buttonContainer, container)
+          },
+
+          // 导出学习状态为JSON文件
+          exportLearningStatus() {
+            try {
+              const savedStatus = localStorage.getItem('courseLearningStatus')
+              const learningStatus = savedStatus ? JSON.parse(savedStatus) : {}
+
+              const dataStr = JSON.stringify(learningStatus, null, 2)
+              const dataBlob = new Blob([dataStr], { type: 'application/json' })
+
+              const link = document.createElement('a')
+              link.href = URL.createObjectURL(dataBlob)
+              link.download = 'course_learning_status.json'
+              link.click()
+            } catch (error) {
+              console.error('导出学习状态失败:', error)
+              alert('导出学习状态失败: ' + error.message)
+            }
+          },
+
+          // 从JSON文件导入学习状态
+          importLearningStatus(event) {
+            const file = event.target.files[0]
+            if (!file) return
+
+            const reader = new FileReader()
+            reader.onload = function (e) {
+              try {
+                const learningStatus = JSON.parse(e.target.result)
+
+                // 验证数据格式
+                if (
+                  typeof learningStatus !== 'object' ||
+                  learningStatus === null
+                ) {
+                  throw new Error('无效的数据格式')
+                }
+
+                localStorage.setItem(
+                  'courseLearningStatus',
+                  JSON.stringify(learningStatus)
+                )
+                alert('学习状态导入成功！页面将刷新以应用更改。')
+                location.reload()
+              } catch (error) {
+                console.error('导入学习状态失败:', error)
+                alert('导入学习状态失败: ' + error.message)
+              }
+            }
+            reader.readAsText(file)
+          },
+        }
+
+        // 课程显示模块
+        const courseDisplay = {
+          // 创建课程卡片
+          createCourseCard(course, index) {
+            const card = document.createElement('li')
+            card.className = 'course-card'
+
+            // 添加状态类
+            card.classList.add(`status-${course.status}`)
+
+            // 检查是否是上次打开的课程
+            const lastOpened = dataManager.getLastOpenedCourse()
+            if (lastOpened && course.url === lastOpened.url) {
+              card.classList.add('last-opened')
+            }
+
+            const title = document.createElement('h3')
+            title.textContent = `第 ${index} 节 ${course.cname}`
+
+            // 添加状态指示器
+            const statusIndicator = document.createElement('span')
+            statusIndicator.className = 'status-indicator'
+            switch (course.status) {
+              case LEARNING_STATUS.COMPLETED:
+                statusIndicator.textContent = '已完成'
+                break
+              case LEARNING_STATUS.IN_PROGRESS:
+                statusIndicator.textContent = '学习中'
+                break
+              default:
+                statusIndicator.textContent = '未开始'
+            }
+
+            const link = document.createElement('a')
+            link.href = course.url
+            link.target = '_blank'
+            link.textContent = '进入课程'
+
+            // 记录点击事件，更新学习状态为进行中
+            link.addEventListener('click', () => {
+              dataManager.updateCourseStatus(
+                course.url,
+                LEARNING_STATUS.IN_PROGRESS
+              )
+              dataManager.saveLastOpenedCourse(course)
+            })
+
+            // 添加完成按钮
+            const completeButton = document.createElement('button')
+            completeButton.textContent = '标记完成'
+            completeButton.className = 'complete-button'
+            completeButton.addEventListener('click', (e) => {
+              e.preventDefault()
+              dataManager.updateCourseStatus(
+                course.url,
+                LEARNING_STATUS.COMPLETED
+              )
+              card.classList.remove(`status-${course.status}`)
+              card.classList.add(`status-${LEARNING_STATUS.COMPLETED}`)
+              course.status = LEARNING_STATUS.COMPLETED
+
+              // 更新进度显示
+              progressDisplay.updateAllProgress(currentActiveLevel)
+            })
+
+            // 添加重新学习按钮
+            const restartButton = document.createElement('button')
+            restartButton.textContent = '重新学习'
+            restartButton.className = 'restart-button'
+            restartButton.addEventListener('click', (e) => {
+              e.preventDefault()
+              dataManager.updateCourseStatus(
+                course.url,
+                LEARNING_STATUS.NOT_START
+              )
+              card.classList.remove(`status-${course.status}`)
+              card.classList.add(`status-${LEARNING_STATUS.NOT_START}`)
+              course.status = LEARNING_STATUS.NOT_START
+
+              // 更新进度显示
+              progressDisplay.updateAllProgress(currentActiveLevel)
+            })
+
+            title.appendChild(statusIndicator)
+            card.appendChild(title)
+            card.appendChild(link)
+
+            // 创建按钮容器
+            const buttonContainer = document.createElement('div')
+            buttonContainer.className = 'button-container'
+            buttonContainer.appendChild(completeButton)
+            buttonContainer.appendChild(restartButton)
+
+            card.appendChild(buttonContainer)
+
+            return card
+          },
+
+          // 显示指定级别的课程
+          showCoursesByLevel(level) {
+            dataManager.loadCourseData().then((courseData) => {
+              const container = document.getElementById('course-container')
+              if (!container) return
+
+              container.innerHTML = '' // 清空现有内容
+
+              // 过滤出当前级别的课程并按顺序排序
+              const levelCourses = courseData
+                .filter((course) => course.level === level)
+                .sort((a, b) => a.order - b.order)
+
+              // 创建课程列表容器
+              const courseList = document.createElement('ul')
+              courseList.className = 'course-list'
+
+              // 为每个课程创建卡片
+              levelCourses.forEach((course) => {
+                const card = this.createCourseCard(course, course.order)
+                courseList.appendChild(card)
+              })
+
+              container.appendChild(courseList)
+            })
+          },
+        }
+
+        // 初始化页面
+        function init() {
+          ui.createNavTabs()
+          ui.createImportExportButtons()
+
+          // 初始化进度显示
+          progressDisplay.updateAllProgress(currentActiveLevel)
+
+          // 检查是否有上次打开的课程
+          const lastOpened = dataManager.getLastOpenedCourse()
+          if (lastOpened) {
+            currentActiveLevel = lastOpened.level
+            // 显示相应级别的课程
+            courseDisplay.showCoursesByLevel(lastOpened.level)
+
+            // 更新导航标签状态
+            document.querySelectorAll('.tab-button').forEach((btn) => {
+              btn.classList.remove('active')
+              if (parseInt(btn.dataset.level) === lastOpened.level) {
+                btn.classList.add('active')
+              }
+            })
+
+            // 更新进度显示
+            progressDisplay.updateCurrentLevelProgress(lastOpened.level)
+
+            // 自动滚动到上次学习的课程
+            setTimeout(() => {
+              const targetElement = document.querySelector('.last-opened')
+              if (targetElement) {
+                targetElement.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center',
+                })
+              }
+            }, 500)
+          } else {
+            // 默认显示第一级课程
+            courseDisplay.showCoursesByLevel(1)
+          }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init)
+      })()
+    </script>
+  </body>
+</html>
